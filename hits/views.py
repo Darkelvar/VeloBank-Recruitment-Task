@@ -94,3 +94,18 @@ class HitDetailUpdateDelete(View):
             return JsonResponse({}, status=204)
         except Hit.DoesNotExist:
             return JsonResponse({"error": "Hit not found"}, status=404)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ArtistList(View):
+    def get(self, request):
+        artists = Artist.objects.all()
+        data = [
+            {
+                "id": artist.id,
+                "first_name": artist.first_name,
+                "last_name": artist.last_name,
+            }
+            for artist in artists
+        ]
+        return JsonResponse(data, safe=False, status=200)
